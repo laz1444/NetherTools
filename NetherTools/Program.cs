@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 using NetherTools.GUI;
 using NetherTools.Memory;
@@ -7,7 +8,21 @@ namespace NetherTools
 {
     public class Program
     {
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
+
+        [DllImport("user32.dll")]
+        static extern bool SetWindowPos(
+            IntPtr hWnd,
+            IntPtr hWndInsertAfter,
+            int X,
+            int Y,
+            int cx,
+            int cy,
+            uint uFlags);
+
         public static IntPtr hProc;
+        static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
 
         static void Main(string[] args)
         {
@@ -39,9 +54,11 @@ namespace NetherTools
                 return;
             }
 
-            ScrollText();
-
+            Thread titleMonitor = new Thread(ScrollText);
+            titleMonitor.Start();
             Console.WriteLine("Done");
+            IntPtr console = GetConsoleWindow();
+            SetWindowPos(console, HWND_BOTTOM, 0, 0, 0, 0, 0x0002 | 0x0001 | 0x0010 | 0x0040);
             MainGUI.Run();
         }
 

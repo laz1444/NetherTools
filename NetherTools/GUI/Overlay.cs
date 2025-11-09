@@ -106,7 +106,7 @@ namespace NetherTools.GUI
 
             IntPtr hWnd = CreateWindowEx(
                 WS_EX_TOPMOST | WS_EX_LAYERED | WS_EX_TRANSPARENT,
-                wc.lpszClassName, "Overlay",
+                wc.lpszClassName, "NetherTools",
                 WS_POPUP | WS_VISIBLE,
                 x, y, width, height,
                 IntPtr.Zero, IntPtr.Zero, wc.hInstance, IntPtr.Zero);
