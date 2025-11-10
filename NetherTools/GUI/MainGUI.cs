@@ -18,7 +18,7 @@ namespace NetherTools.GUI
             IntPtr mcHandle = FindWindow(null, "Minecraft");
             if (mcHandle == IntPtr.Zero)
             {
-                Console.WriteLine("Minecraft window not found!");
+                Log.error("Minecraft window not found!");
                 return;
             }
 
@@ -26,7 +26,7 @@ namespace NetherTools.GUI
             int width = gameRect.Right - gameRect.Left;
             int height = gameRect.Bottom - gameRect.Top;
             Overlay.CreateOverlay(gameRect.Left, gameRect.Top, width, height);
-            Console.WriteLine($"Minecraft found at ({gameRect.Left},{gameRect.Top}) size {width}x{height}");
+            Log.debug($"Minecraft found at ({gameRect.Left},{gameRect.Top}) size {width}x{height}");
         }
     }
 }

@@ -16,7 +16,7 @@ namespace NetherTools.Memory
             bool wrote = WriteProcessMemory(Program.hProc, address, writeBuf, (IntPtr)writeBuf.Length, out IntPtr bytesWritten);
             if (!wrote)
             {
-                Console.WriteLine($"WriteProcessMemory failed. Win32 error: {Marshal.GetLastWin32Error()}");
+                Log.error($"WriteProcessMemory failed. Win32 error: {Marshal.GetLastWin32Error()}");
                 return;
             }
         }

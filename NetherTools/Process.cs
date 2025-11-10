@@ -21,7 +21,7 @@ namespace NetherTools
             if (hProc == IntPtr.Zero)
             {
                 int err = Marshal.GetLastWin32Error();
-                Console.WriteLine($"Couldn't get process {err}");
+                Log.error($"Couldn't get process {err}");
                 return false;
             }
             Program.hProc = hProc;

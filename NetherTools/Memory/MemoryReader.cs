@@ -22,18 +22,24 @@ namespace NetherTools.Memory
             public uint Type;
         }
 
-        public static IntPtr PatternScan(IntPtr hProc, IntPtr moduleBase, int moduleSize, string pattern)
+        public static byte[] ReadBytes(IntPtr address, int size, int offset = 0)
         {
-            byte[] moduleData = new byte[moduleSize];
+            byte[] buffer = new byte[size];
+            IntPtr targetAddress = (IntPtr)(address.ToInt64() + offset);
 
-            if (!ReadProcessMemory(hProc, moduleBase, moduleData, (IntPtr)moduleSize, out IntPtr bytesRead))
+            if (ReadProcessMemory(Program.hProc, targetAddress, buffer, (IntPtr)size, out IntPtr bytesRead))
             {
-                return IntPtr.Zero;
+                return buffer;
             }
 
+            throw new Exception($"Failed to read memory at 0x{targetAddress.ToInt64():X}");
+        }
+
+        private static IntPtr PatternScan(byte[] buffer, IntPtr baseAddress, int bufferSize, string pattern)
+        {
             string[] patternBytes = pattern.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-            for (int i = 0; i <= moduleSize - patternBytes.Length; i++)
+            for (int i = 0; i <= bufferSize - patternBytes.Length; i++)
             {
                 bool match = true;
                 for (int j = 0; j < patternBytes.Length; j++)
@@ -42,7 +48,7 @@ namespace NetherTools.Memory
                         continue;
 
                     byte patternByte = Convert.ToByte(patternBytes[j], 16);
-                    if (moduleData[i + j] != patternByte)
+                    if (buffer[i + j] != patternByte)
                     {
                         match = false;
                         break;
@@ -50,25 +56,24 @@ namespace NetherTools.Memory
                 }
 
                 if (match)
-                {
-                    IntPtr foundAddr = (IntPtr)(moduleBase.ToInt64() + i);
-
-                    return foundAddr;
-                }
+                    return (IntPtr)(baseAddress.ToInt64() + i);
             }
 
             return IntPtr.Zero;
         }
 
-        public static IntPtr ScanMemory(nint process, string pattern)
+        public static Dictionary<string, IntPtr> ScanMemory(IntPtr hProc, Dictionary<string, string> patterns)
         {
+            Log.info("Scan in progress, expected performace isues until done");
+
+            var results = new Dictionary<string, IntPtr>();
+
             long minAddress = 0x10000000000;
             long maxAddress = 0x7FFFFFFFFFF;
-
             MEMORY_BASIC_INFORMATION memInfo = new MEMORY_BASIC_INFORMATION();
             long address = minAddress;
 
-            while (address < maxAddress && VirtualQueryEx(process, (IntPtr)address, out memInfo, (uint)Marshal.SizeOf(memInfo)) != 0)
+            while (address < maxAddress && VirtualQueryEx(hProc, (IntPtr)address, out memInfo, (uint)Marshal.SizeOf(memInfo)) != 0)
             {
                 if ((memInfo.State & 0x1000) != 0 && (memInfo.Protect & 0x100) == 0)
                 {
@@ -77,19 +82,32 @@ namespace NetherTools.Memory
 
                     if (regionSize > 0 && regionSize < 100 * 1024 * 1024)
                     {
-                        IntPtr foundAddr = PatternScan(process, regionBase, regionSize, pattern);
-                        if (foundAddr != IntPtr.Zero)
+                        byte[] regionData = new byte[regionSize];
+                        if (ReadProcessMemory(hProc, regionBase, regionData, (IntPtr)regionSize, out IntPtr bytesRead))
                         {
-                            Console.WriteLine($"Found in memory region: 0x{regionBase.ToInt64():X}-0x{(regionBase.ToInt64() + regionSize):X}");
-                            return foundAddr;
+                            foreach (var pattern in patterns)
+                            {
+                                if (!results.ContainsKey(pattern.Key))
+                                {
+                                    IntPtr foundAddr = PatternScan(regionData, regionBase, regionSize, pattern.Value);
+                                    if (foundAddr != IntPtr.Zero)
+                                    {
+                                        results[pattern.Key] = foundAddr;
+                                        Log.debug($"Found '{pattern.Key}' at: 0x{foundAddr.ToInt64():X}");
+
+                                        if (results.Count == patterns.Count)
+                                            return results;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-
                 address = (long)memInfo.BaseAddress + (long)memInfo.RegionSize;
             }
 
-            return IntPtr.Zero;
+            Log.info("Scan is done");
+            return results;
         }
     }
 }

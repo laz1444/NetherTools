@@ -1,6 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System.Collections;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using NetherTools.Functions;
+using NetherTools.Functions.Internal;
 using NetherTools.GUI;
 using NetherTools.Memory;
 
@@ -26,11 +29,12 @@ namespace NetherTools
 
         static void Main(string[] args)
         {
+            Log.debugMode = true;
             string procName = "Minecraft.Windows";
             Process[] procs = Process.GetProcessesByName(procName);
             if (procs.Length == 0)
             {
-                Console.WriteLine($"Process {procName} not found");
+                Log.error($"Process {procName} not found");
                 return;
             }
 
@@ -44,39 +48,13 @@ namespace NetherTools
             ProcessModule mainMod = proc.MainModule;
             IntPtr moduleBase = mainMod.BaseAddress;
             int moduleSize = mainMod.ModuleMemorySize;
-            Console.WriteLine($"Injecting...");
+            Log.info($"Injecting... Please stay in Main menu until done");
 
-            DynamicMemory.version = MemoryReader.ScanMemory(hProc, Hooks.version);
+            MemoryScanner.Scan(MemoryScanner.ScanType.Menu);
 
-            if (DynamicMemory.version == IntPtr.Zero)
-            {
-                Console.WriteLine("error versionAddress");
-                return;
-            }
-
-            Thread titleMonitor = new Thread(ScrollText);
-            titleMonitor.Start();
-            Console.WriteLine("Done");
             IntPtr console = GetConsoleWindow();
             SetWindowPos(console, HWND_BOTTOM, 0, 0, 0, 0, 0x0002 | 0x0001 | 0x0010 | 0x0040);
             MainGUI.Run();
-        }
-
-        static void ScrollText()
-        {
-            string text = "NetherToo";
-            string sequence = "ls for v1.21.121 NetherToo";
-            int seqIndex = 0;
-
-            while (true)
-            {
-                MemoryWriter.Write(DynamicMemory.version, Encoding.ASCII.GetBytes(text));
-                text = text.Substring(1);
-                text += sequence[seqIndex];
-                seqIndex = (seqIndex + 1) % sequence.Length;
-
-                Thread.Sleep(1000);
-            }
         }
     }
 }
