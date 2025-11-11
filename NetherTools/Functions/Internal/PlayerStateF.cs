@@ -1,5 +1,6 @@
-﻿using NetherTools.Memory;
-using System.Text;
+﻿using System.Text;
+using NetherTools.GUI;
+using NetherTools.Memory;
 
 namespace NetherTools.Functions.Internal
 {
@@ -8,6 +9,7 @@ namespace NetherTools.Functions.Internal
         public static bool isRunning { get; protected set; } = false;
         private static bool wasInMenu = false;
         private static bool didMenuScan = false;
+        private static bool inputDetectRun = false;
 
         public static void Run()
         {
@@ -32,7 +34,6 @@ namespace NetherTools.Functions.Internal
             {
                 byte[] stateBytes = MemoryReader.ReadBytes(DynamicMemory.playerState, 4);
                 Player.PlayerState = Encoding.UTF8.GetString(stateBytes);
-                Log.debug(Encoding.UTF8.GetString(stateBytes));
 
                 if (Player.PlayerState == "Menu")
                 {
@@ -53,6 +54,13 @@ namespace NetherTools.Functions.Internal
                         Thread.Sleep(6000);
                         didMenuScan = true;
                         MemoryScanner.Scan(MemoryScanner.ScanType.Game);
+                        Notifications.Send("NetherTools: Click Insert to see available options", 10);
+                        if (!inputDetectRun)
+                        {
+                            inputDetectRun = true;
+                            Thread inputDetect = new Thread(KeyboardInput.Run);
+                            inputDetect.Start();
+                        }
                     }
                     VersionF.Stop();
                 }

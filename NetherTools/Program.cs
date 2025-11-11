@@ -3,9 +3,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using NetherTools.Functions;
-using NetherTools.Functions.Internal;
 using NetherTools.GUI;
-using NetherTools.Memory;
 
 namespace NetherTools
 {
@@ -31,14 +29,14 @@ namespace NetherTools
         {
             Log.debugMode = true;
             string procName = "Minecraft.Windows";
-            Process[] procs = Process.GetProcessesByName(procName);
+            System.Diagnostics.Process[] procs = System.Diagnostics.Process.GetProcessesByName(procName);
             if (procs.Length == 0)
             {
                 Log.error($"Process {procName} not found");
                 return;
             }
 
-            Process proc = procs[0];
+            System.Diagnostics.Process proc = procs[0];
 
             if (!Process2.GetProcess(proc.Id))
             {
@@ -51,9 +49,6 @@ namespace NetherTools
             Log.info($"Injecting... Please stay in Main menu until done");
 
             MemoryScanner.Scan(MemoryScanner.ScanType.Menu);
-
-            IntPtr console = GetConsoleWindow();
-            SetWindowPos(console, HWND_BOTTOM, 0, 0, 0, 0, 0x0002 | 0x0001 | 0x0010 | 0x0040);
             MainGUI.Run();
         }
     }
