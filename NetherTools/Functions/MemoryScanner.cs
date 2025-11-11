@@ -20,11 +20,13 @@ namespace NetherTools.Functions
                 if (addressData.ContainsKey("playerState"))
                 {
                     DynamicMemory.playerState = addressData["playerState"];
+                    MemoryReader.workingOffset = addressData["playerState"] & ~(MemoryReader.workingOffset - 1);
                     PlayerStateF.Run();
                 }
                 else
                 {
                     Log.error("get playerState Failed");
+                    Log.error("injection Failed");
                     return;
                 }
 
