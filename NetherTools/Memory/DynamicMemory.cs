@@ -2,7 +2,7 @@
 {
     public class DynamicMemory
     {
-        public static IntPtr coordinates;
+        public static IntPtr movement;
         public static IntPtr version;
         public static IntPtr playerState;
     }

@@ -69,7 +69,7 @@ namespace NetherTools.Memory
             var results = new Dictionary<string, IntPtr>();
 
             long minAddress = 0x10000000000;
-            long maxAddress = 0x7FFFFFFFFFF;
+            long maxAddress = 0x4FFFFFFFFFF;
             MEMORY_BASIC_INFORMATION memInfo = new MEMORY_BASIC_INFORMATION();
             long address = minAddress;
 
@@ -106,7 +106,6 @@ namespace NetherTools.Memory
                 address = (long)memInfo.BaseAddress + (long)memInfo.RegionSize;
             }
 
-            Log.info("Scan is done");
             return results;
         }
     }

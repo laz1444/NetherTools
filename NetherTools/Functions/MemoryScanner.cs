@@ -37,14 +37,14 @@ namespace NetherTools.Functions
             {
                 var addressData = MemoryReader.ScanMemory(Program.hProc, Hooks.playingScan);
 
-                if (addressData.ContainsKey("coordinates"))
+                if (addressData.ContainsKey("movement"))
                 {
-                    DynamicMemory.coordinates = addressData["coordinates"];
+                    DynamicMemory.movement = addressData["movement"];
                     PositionF.Run();
                 }
                 else
                 {
-                    Log.error("get coordinates Failed");
+                    Log.error("get movement Failed");
                 }
             }
         }

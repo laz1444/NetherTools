@@ -27,7 +27,7 @@ namespace NetherTools.Functions.Internal
             isRunning = true;
 
             string text = "NetherToo";
-            string sequence = "ls for v1.21.121 NetherToo";
+            string sequence = "ls for v1.21.122 NetherToo";
             int seqIndex = 0;
 
             while (isRunning)

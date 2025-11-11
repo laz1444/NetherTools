@@ -28,7 +28,7 @@ namespace NetherTools.Functions.Internal
 
             while (isRunning)
             {
-                byte[] coordinateBytes = MemoryReader.ReadBytes(DynamicMemory.coordinates, (4 * 3), 4 - 16);
+                byte[] coordinateBytes = MemoryReader.ReadBytes(DynamicMemory.movement, 4 * 3, 2 + (16 * 9));
                 Log.debug($"pos: {FromBytes.ToFloat(coordinateBytes)}, {FromBytes.ToFloat(coordinateBytes, 4)}, {FromBytes.ToFloat(coordinateBytes, 8)}");
                 Thread.Sleep(2000);
             }
