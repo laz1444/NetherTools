@@ -11,6 +11,11 @@ namespace NetherTools.Functions
             Game
         }
 
+        public static void Init(IntPtr baseAddress)
+        {
+            DynamicMemory.fps = baseAddress + StaticMemory.fps;
+        }
+
         public static void Scan(ScanType type)
         {
             if (type == ScanType.Menu)
@@ -43,6 +48,7 @@ namespace NetherTools.Functions
                 {
                     DynamicMemory.movement = addressData["movement"];
                     PositionF.Run();
+                    FpsF.Run();
                 }
                 else
                 {

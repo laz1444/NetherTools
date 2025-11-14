@@ -9,8 +9,9 @@ namespace NetherTools.GUI
         static extern short GetAsyncKeyState(int vKey);
 
         private const int INSERT = 0x2D;
-        private const int ALT = 0x12;
+        private const int TAB = 0x09;
         private const int C = 0x43;
+        private const int F = 0x46;
 
         public static void Run()
         {
@@ -24,10 +25,18 @@ namespace NetherTools.GUI
                     Thread.Sleep(500);
                 }
 
-                if (IsKeyPressed(ALT) && IsKeyPressed(C))
+                if (IsKeyPressed(TAB))
                 {
-                    PlayerCoordinate.enabled = !PlayerCoordinate.enabled;
-                    Thread.Sleep(500);
+                    if (IsKeyPressed(C))
+                    {
+                        ModulesProcessor.Get("PlayerCoordinate")?.Toggle();
+                        Thread.Sleep(500);
+                    }
+                    if (IsKeyPressed(F))
+                    {
+                        ModulesProcessor.Get("FPS")?.Toggle();
+                        Thread.Sleep(500);
+                    }
                 }
 
                 Thread.Sleep(10);

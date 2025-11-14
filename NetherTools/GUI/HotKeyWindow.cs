@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using GameOverlay.Drawing;
+﻿using GameOverlay.Drawing;
 
 namespace NetherTools.GUI
 {
@@ -36,9 +35,13 @@ namespace NetherTools.GUI
 
             gfx.DrawText(MainGUI.font, MainGUI.Orange, centerX - size.X / 2f, centerY - size.Y / 2f, title);
             gfx.DrawText(MainGUI.font, MainGUI.Orange, centerX - size.X / 2f, (centerY - size.Y / 2f) + 40, line1);
+            bool PlayerCoordinateEnabled = (bool)ModulesProcessor.Get("PlayerCoordinate")?.Enabled;
+            gfx.DrawText(MainGUI.font, PlayerCoordinateEnabled ? MainGUI.Green : MainGUI.Red, (centerX - size.X / 2f) + 250, (centerY - size.Y / 2f) + 40, PlayerCoordinateEnabled ? "[ON]" : "[OFF]");
+            bool FPSEnabled = (bool)ModulesProcessor.Get("FPS")?.Enabled;
+            gfx.DrawText(MainGUI.font, FPSEnabled ? MainGUI.Green : MainGUI.Red, (centerX - size.X / 2f) + 570, (centerY - size.Y / 2f) + 40, FPSEnabled ? "[ON]" : "[OFF]");
+
             gfx.DrawText(MainGUI.font, MainGUI.Orange, centerX - size.X / 2f, (centerY - size.Y / 2f) + 60, line2);
 
-            gfx.DrawText(MainGUI.font, PlayerCoordinate.enabled ? MainGUI.Green : MainGUI.Red, (centerX - size.X / 2f) + 250, (centerY - size.Y / 2f) + 40, PlayerCoordinate.enabled ? "[ON]" : "[OFF]");
             gfx.DrawText(MainGUI.font, MainGUI.Green, (centerX - size.X / 2f) + 250, (centerY - size.Y / 2f) + 60, "[ON]");
         }
     }

@@ -76,7 +76,7 @@ namespace NetherTools.GUI
 
                 Notifications.Draw(gfx);
                 HotKeyWindow.Draw(gfx);
-                PlayerCoordinate.Draw(gfx);
+                ModulesProcessor.Draw(gfx);
             };
 
             new Thread(() =>

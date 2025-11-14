@@ -54,7 +54,7 @@ namespace NetherTools.Functions.Internal
                         Thread.Sleep(6000);
                         didMenuScan = true;
                         MemoryScanner.Scan(MemoryScanner.ScanType.Game);
-                        Notifications.Send("NetherTools: Click Insert to see available options", 10);
+                        Notifications.Send("NetherTools: Click Insert to see available options", 15);
                         if (!inputDetectRun)
                         {
                             inputDetectRun = true;

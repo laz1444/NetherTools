@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using NetherTools.Functions;
 using NetherTools.GUI;
+using NetherTools.GUI.Modules;
 
 namespace NetherTools
 {
@@ -48,7 +49,14 @@ namespace NetherTools
             int moduleSize = mainMod.ModuleMemorySize;
             Log.info($"Injecting... Please stay in Main menu until done");
 
+            MemoryScanner.Init(moduleBase);
             MemoryScanner.Scan(MemoryScanner.ScanType.Menu);
+
+            ModulesProcessor.Register(new PlayerCoordinate());
+            ModulesProcessor.Register(new FPS());
+
+            Log.info($"Done");
+
             MainGUI.Run();
         }
     }
