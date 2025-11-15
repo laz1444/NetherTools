@@ -19,6 +19,12 @@ namespace NetherTools.GUI
 
             while (true)
             {
+                if (Player.PlayerState == "Menu")
+                {
+                    Thread.Sleep(5000);
+                    continue;
+                }
+
                 if (IsKeyPressed(INSERT))
                 {
                     HotKeyWindow.enabled = !HotKeyWindow.enabled;

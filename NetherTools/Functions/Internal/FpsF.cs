@@ -4,33 +4,22 @@ namespace NetherTools.Functions.Internal
 {
     public class FpsF
     {
-        public static bool isRunning { get; protected set; } = false;
+        private static Timer timer;
+        public static bool isRunning => timer != null;
 
         public static void Run()
         {
-            Thread thread = new Thread(Function);
-            thread.Start();
+            timer = new Timer(_ =>
+            {
+                byte[] fpsBytes = Hooks.GetFPS();
+                Player.FPS = FromBytes.ToFloat(fpsBytes);
+            }, null, 0, 2000);
         }
 
         public static void Stop()
         {
-            isRunning = false;
-        }
-
-        private static void Function()
-        {
-            if (isRunning)
-            {
-                return;
-            }
-            isRunning = true;
-
-            while (isRunning)
-            {
-                byte[] coordinateBytes = MemoryReader.ReadBytes(DynamicMemory.fps, 4);
-                Player.FPS = FromBytes.ToFloat(coordinateBytes);
-                Thread.Sleep(2000);
-            }
+            timer?.Dispose();
+            timer = null;
         }
     }
 }

@@ -55,6 +55,9 @@ namespace NetherTools
             ModulesProcessor.Register(new PlayerCoordinate());
             ModulesProcessor.Register(new FPS());
 
+            Thread inputDetect = new Thread(KeyboardInput.Run);
+            inputDetect.Start();
+
             Log.info($"Done");
 
             MainGUI.Run();

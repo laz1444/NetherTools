@@ -6,33 +6,16 @@ namespace NetherTools.Functions.Internal
 {
     public class PlayerStateF
     {
-        public static bool isRunning { get; protected set; } = false;
+        private static Timer timer;
+        public static bool isRunning => timer != null;
         private static bool wasInMenu = false;
         private static bool didMenuScan = false;
-        private static bool inputDetectRun = false;
 
         public static void Run()
         {
-            Thread thread = new Thread(Function);
-            thread.Start();
-        }
-
-        public static void Stop()
-        {
-            isRunning = false;
-        }
-
-        private static void Function()
-        {
-            if (isRunning)
+            timer = new Timer(_ =>
             {
-                return;
-            }
-            isRunning = true;
-
-            while (isRunning)
-            {
-                byte[] stateBytes = MemoryReader.ReadBytes(DynamicMemory.playerState, 4);
+                byte[] stateBytes = Hooks.GetPlayerState();
                 Player.PlayerState = Encoding.UTF8.GetString(stateBytes);
 
                 if (Player.PlayerState == "Menu")
@@ -40,7 +23,8 @@ namespace NetherTools.Functions.Internal
                     wasInMenu = true;
                     didMenuScan = false;
                     VersionF.Run();
-                    PositionF.Stop();
+                    ModulesProcessor.Reset();
+                    HotKeyWindow.enabled = false;
                 }
                 else
                 {
@@ -51,22 +35,19 @@ namespace NetherTools.Functions.Internal
                     }
                     if (!didMenuScan)
                     {
-                        Thread.Sleep(6000);
                         didMenuScan = true;
                         MemoryScanner.Scan(MemoryScanner.ScanType.Game);
                         Notifications.Send("NetherTools: Click Insert to see available options", 15);
-                        if (!inputDetectRun)
-                        {
-                            inputDetectRun = true;
-                            Thread inputDetect = new Thread(KeyboardInput.Run);
-                            inputDetect.Start();
-                        }
                     }
                     VersionF.Stop();
                 }
+            }, null, 0, 6000);
+        }
 
-                Thread.Sleep(6000);
-            }
+        public static void Stop()
+        {
+            timer?.Dispose();
+            timer = null;
         }
     }
 }

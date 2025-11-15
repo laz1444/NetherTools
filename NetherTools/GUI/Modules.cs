@@ -42,6 +42,22 @@ namespace NetherTools.GUI
             }
         }
 
+        public static void Reset()
+        {
+            lock (_lock)
+            {
+                var modules = Get();
+                foreach (Module module in modules)
+                {
+                    if (module.Enabled)
+                    {
+                        module.Toggle();
+                    }
+                }
+                data.Clear();
+            }
+        }
+
         public static IEnumerable<Module> Get()
         {
             lock (_lock)
