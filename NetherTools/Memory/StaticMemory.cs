@@ -2,6 +2,6 @@
 {
     public class StaticMemory
     {
-        public static IntPtr fps = new IntPtr(0x9E1BAD0);
+        public static IntPtr fps = new IntPtr(0x9E1BA90);
     }
 }
