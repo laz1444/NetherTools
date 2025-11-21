@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using NetherTools.Functions.Internal;
 using WindowsInput;
 
 namespace NetherTools.GUI
@@ -10,6 +11,7 @@ namespace NetherTools.GUI
 
         private const int INSERT = 0x2D;
         private const int TAB = 0x09;
+        private const int B = 0x42;
         private const int C = 0x43;
         private const int F = 0x46;
 
@@ -33,6 +35,11 @@ namespace NetherTools.GUI
 
                 if (IsKeyPressed(TAB))
                 {
+                    if (IsKeyPressed(B))
+                    {
+                        FullBrightnessF.Toggle();
+                        Thread.Sleep(500);
+                    }
                     if (IsKeyPressed(C))
                     {
                         ModulesProcessor.Get("PlayerCoordinate")?.Toggle();

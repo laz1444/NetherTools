@@ -48,12 +48,21 @@ namespace NetherTools.Functions
                 {
                     DynamicMemory.movement = addressData["movement"];
                     PositionF.Run();
-                    FpsF.Run();
                 }
                 else
                 {
                     Log.error("get movement Failed");
                 }
+                if (addressData.ContainsKey("brightness"))
+                {
+                    DynamicMemory.rendering_brightness = addressData["brightness"];
+                    PositionF.Run();
+                }
+                else
+                {
+                    Log.error("get brightness Failed");
+                }
+                FpsF.Run();
             }
         }
     }
