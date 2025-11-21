@@ -11,7 +11,7 @@ namespace NetherTools.Functions.Internal
         public static void Run()
         {
             string text = "NetherToo";
-            string sequence = "ls for v1.21.122 NetherToo";
+            string sequence = "ls for v1.21.124 NetherToo";
             int seqIndex = 0;
 
             timer = new Timer(_ =>

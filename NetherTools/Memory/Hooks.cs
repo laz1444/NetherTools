@@ -6,7 +6,7 @@
         public static string playerState = "4D 65 6E 75 73 00 6E"; //Starts right here. Contains values like Menu, Crea, Surv ..etc. 
         public static string setTime = "01 00 00 00 00 00 00 00 FF 7F 00 00 00 00 00 00 ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 04";
        // public static string queryTime = "01 00 00 00 00 00 00 00 FF 7F 00 00 00 00 00 00 ?? ?? ?? 00 00 00 00 00 ?? ?? 17 69 00 00 00 00 04";
-        public static string version = "76 31 2E 32 31 2E 31 32 33 00 00 00 00 00 00 00 09 00 00 00 00 00 00 00 0F 00 00 00 00 00 00 00 00 00 38"; //game version. Starts right here
+        public static string version = "76 31 2E 32 31 2E 31 32 34 00 00 00 00 00 00 00 09 00 00 00 00 00 00 00 0F 00 00 00 00 00 00 00 00 00 38"; //game version. Starts right here
 
         public static byte[] GetPlayerCoordinates()
         {
